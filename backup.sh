@@ -1,6 +1,7 @@
 #!/bin/bash
 
 # Options
+[ -f ./env ] && source ./env
 FULL_IF_OLDER_THAN="${FULL_IF_OLDER_THAN:-14D}"
 REMOVE_OLDER_THAN="${REMOVE_OLDER_THAN:-3M}"
 

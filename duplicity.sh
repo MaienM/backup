@@ -1,6 +1,7 @@
 #!/bin/bash
 
 # Options
+[ -f ./env ] && source ./env
 REMOTE_URL="${REMOTE_URL:-webdavs://user@stack.example.com/remote.php/webdav}"
 GPG_KEY="${GPG_KEY:-01234567}"
 DUPLICITY_DIR="${DUPLICITY_DIR:-/var/lib/duplicity}"

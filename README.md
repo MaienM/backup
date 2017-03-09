@@ -5,6 +5,9 @@ This repository contains two script to manage backups using docker and duplicity
 The underlying idea of these scripts is that each folder is backed up separately from the rest,
 without underlying dependencies.
 
+For convenience, any of the environment variables mentioned below can also be
+stored in a file named `env` in the current directory.
+
 ## backup.sh
 
 This is the main script to perform backups. It will perform a backup for every file/folder passed to
