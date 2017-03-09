@@ -47,7 +47,6 @@ done
 # Run the duplicity command
 docker run \
     --rm \
-    -ti \
     -h "$HOSTNAME-duplicity" \
     -v "$DUPLICITY_DIR/gnupg":/root/.gnupg \
     -v "$DUPLICITY_DIR/archive":/root/.cache/duplicity \
