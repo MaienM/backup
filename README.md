@@ -1,47 +1,47 @@
 # Backups
 
-This repository contains two script to manage backups using docker and duplicity.
+This repository contains two script to manage backups using docker and attic.
 
 The underlying idea of these scripts is that each folder is backed up separately from the rest,
 without underlying dependencies.
-
-For convenience, any of the environment variables mentioned below can also be
-stored in a file named `env` in the current directory.
 
 ## backup.sh
 
 This is the main script to perform backups. It will perform a backup for every file/folder passed to
 it as an argument.
 
-Additionally, it uses the following environment variables to customize it's behavior:
+```
+Usage: ./backup.sh [env file] [paths...]
 
-- `FULL_IF_OLDER_THAN`: Force a full backup if the last full (non-incremental) backup was longer
-  than this time period ago. Defaults to 14D (14 days).
-- `REMOVE_OLDER_THAN`: Remove backups older than this time period. Full backups that are still
-  needed for incremental backups will be kept as long as they are still needed. Defaults to 3M (3
-  months).
+env file is a file with the following environment variables:
+  DESTINATION: the root destination folder. A subfolder in this
+    folder will be used for each of the source paths
+  ATTIC_PASSPHRASE: the passphrase to use
+  KEEP_HOURLY: the amount of hourly backups to keep
+  KEEP_DAILY: the amount of daily backups to keep
+  KEEP_WEEKLY: the amount of weekly backups to keep
+  KEEP_MONTHLY: the amount of monthly backups to keep
+  KEEP_YEARLY: the amount of yearly backups to keep
+```
 
-## duplicity.sh
+## attic.sh
 
-This script is a wrapped around a duplicity docker container. It uses gpg for encryption and signing
-by default.
+This script is a wrapper around an attic docker container.
 
-It uses the folloring environment variables to customize it's behavior:
+```
+Usage: ./attic.sh [env file] [path] [arguments...]
 
-- `REMOTE_URL`: A duplicity compatible target url for the backups. Subfolders will be made in this
-  location for each of the backed up folders. Defaults to
-  'webdavs://user@stack.example.com/remote.php/webdav'. The password should go in the secrets file,
-  NOT in this URL.
-- `GPG_KEY`: The GPG key signature.
-- `DUPLICITY_DIR`: The root directory for duplicity to use. Defaults to `/var/lib/duplicity`. Inside
-  of this directory should be the following:
-  - `gnupg`: folder with gnupg key and related files (`secring.gpg`, `trustdbd.gpg`)
-  - `secrets`: file with secrets in it. See `secrets_example`
-  - `archive`: folder that will be used by duplicity for it's local cache
+env file is a file with the following environment variables:
+  DESTINATION: the root destination folder. A subfolder in this
+    folder will be used for the backup, depending on the backed up
+    path
+  ATTIC_PASSPHRASE: the passphrase to use
 
-It takes at least one argument: the path to backup. Any additional arguments will be passed to
-duplicity, with the following special arguments being expanded:
-  - `<path>`: will be expanded to the path, inside the docker container
-    DO NOT PASS THE PATH DIRECTLY! This will NOT work
-  - `<url>`: will be expanded to the appropriate url for this path
-  - `<name>`: will be expanded to the name of this backup
+path is the folder to backup
+
+As attic will be ran inside a docker container, the paths you pass
+must the ones inside of the container. These are the following:
+  /source: the source directory (passed to this command as path)
+  /destination: the destination directory (a subdirectory of
+    $DESTINATION based on the source path)
+```
