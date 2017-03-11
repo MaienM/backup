@@ -47,7 +47,9 @@ for bdir in "$@"; do
     # Create new backups
     echo "===== Backup ====="
     echo
-    attic "$ENV_FILE" "$bdir" init /destination -e passphrase
+    attic "$ENV_FILE" "$bdir" init /destination -e passphrase &> /dev/null \
+        && echo "Initialized new repository" \
+        || echo "Using existing repository"
     attic "$ENV_FILE" "$bdir" create -s "/destination::$(date +'%Y-%m-%d_%H:%M:%S')" "/source" || die
 
     # Cleanup old backups
