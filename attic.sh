@@ -37,7 +37,8 @@ mkdir -p "$(dirname $DESTINATION)"
 docker run \
     --rm \
     -h "$HOSTNAME-attic" \
-    -v "$SOURCE":/source:ro \
+    -w / \
+    -v "$SOURCE":/source \
     -v "$DESTINATION":/destination \
     --env-file "$ENV_FILE" \
     pataquets/attic "$@"
