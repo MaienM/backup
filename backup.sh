@@ -91,8 +91,8 @@ echo "== Summary"
 echo 
 for bdir in "$@"; do
     [ "${statuses["$bdir"]}" -eq 0 ] \
-        && echo "- &#10003; $bdir" \
-        || echo "- &#10007; **$bdir**"
+        && echo "- ✓ $bdir" \
+        || echo "- ✗ **$bdir**"
 done
 
 # Exit with 0 if everything succeeded, and with 1 if anything failed
