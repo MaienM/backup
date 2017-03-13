@@ -30,24 +30,13 @@ KEEP_MONTHLY=${KEEP_MONTHLY:--1}
 KEEP_YEARLY=${KEEP_YEARLY:--1}
 source "$ENV_FILE"
 
-# Function to easily abort on failure
-function die() {
-    echo
-    echo >&2 "WARNING: Action failed, aborting"
-    exit 1
-}
-
 # Function that calls the borg script
 function borg() {
     "$(realpath "${BASH_SOURCE%/*}")/borg.sh" "$@" | sed 's/^/  /'
 }
 
-echo "= Backup report"
-echo "$(hostname)"
-echo "$(date +'%Y-%m-%d %H.%M')"
-echo
-
-for bdir in "$@"; do
+# Function that processes a directory
+function process_directory() {
     echo "== $bdir"
     echo
     borg "$ENV_FILE" "$bdir" init -e keyfile &> /dev/null \
@@ -58,7 +47,7 @@ for bdir in "$@"; do
     # Create new backups
     echo "=== Backup"
     echo
-    borg "$ENV_FILE" "$bdir" create -v -s "::$(date +'%Y-%m-%d_%H:%M:%S')" "/source" || die
+    borg "$ENV_FILE" "$bdir" create -v -s "::$(date +'%Y-%m-%d_%H:%M:%S')" "/source" || return 1
     echo
 
     # Cleanup old backups
@@ -70,6 +59,41 @@ for bdir in "$@"; do
         --keep-weekly="$KEEP_WEEKLY" \
         --keep-monthly="$KEEP_MONTHLY" \
         --keep-yearly="$KEEP_YEARLY" \
-    || die
+    || return 1
     echo
+}
+
+echo "= Backup report"
+echo "$(hostname)"
+echo "$(date +'%Y-%m-%d %H.%M')"
+echo
+
+declare -A statuses
+failed=0
+for bdir in "$@"; do
+    process_directory "$bdir"
+    statuscode=$?
+
+    # If the processing failed, indicate so
+    if [[ $statuscode -ne 0 ]]; then
+        echo
+        echo >&2 "WARNING: Action failed"
+        echo
+        failed=1
+    fi
+
+    # Store the result in the list for the final summary
+    statuses["$bdir"]=$statuscode
 done
+
+# Final summary
+echo "== Summary"
+echo 
+for bdir in "$@"; do
+    [ "${statuses["$bdir"]}" -eq 0 ] \
+        && echo "- &#10003; $bdir" \
+        || echo "- &#10007; **$bdir**"
+done
+
+# Exit with 0 if everything succeeded, and with 1 if anything failed
+exit $failed
