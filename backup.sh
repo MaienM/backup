@@ -44,7 +44,7 @@ function borg() {
 
 echo "= Backup report"
 echo "$(hostname)"
-echo "$(date +'%Y-%m-%d %H\:%M')"
+echo "$(date +'%Y-%m-%d %H.%M')"
 echo
 
 for bdir in "$@"; do
