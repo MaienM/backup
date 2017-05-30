@@ -88,7 +88,7 @@ done
 
 # Final summary
 echo "== Summary"
-echo 
+echo
 for bdir in "$@"; do
     [ "${statuses["$bdir"]}" -eq 0 ] \
         && echo "- ✓ $bdir" \
