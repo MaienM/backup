@@ -38,8 +38,13 @@ source "$ENV_FILE"
 DESTINATION="$DESTINATION/${SOURCE//\//_}"
 mkdir -p "$(dirname $DESTINATION)"
 
+# Determine whether to run interactively
+FLAGS=""
+[ -t 1 ] && FLAGS="$FLAGS -i"
+
 # Run the borg command
 docker run \
+    $FLAGS \
     --rm \
     -t \
     -h "$HOSTNAME-borg" \
