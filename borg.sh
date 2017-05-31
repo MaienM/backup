@@ -37,7 +37,7 @@ fi
 
 # Parse arguments
 ENV_FILE="$1"
-SOURCE="$2"
+SOURCE="${2%/}"
 shift 2
 
 # Options
