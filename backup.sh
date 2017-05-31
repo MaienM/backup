@@ -87,7 +87,7 @@ declare -A statuses
 failed=0
 for bdir in "$TARGETS" "$@"; do
     # If this folder has already been processed, skip
-    if [[ -n $statuses["$bdir"] ]]; then
+    if [[ ${statuses["$bdir"]+isset} ]]; then
         echo
         echo "Folder has already been backed up this run, skipping"
         echo
