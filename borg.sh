@@ -25,9 +25,9 @@ if [[ -z "$1" || ! -f "$1" || -z $2 || ! -d "$2" ]]; then
     echo "are not overridden in the env file"
     echo
     echo "Additionally, the env file is passed to borg, so it can also contain any of the"
-    echo "other environment variables recognized by borg, with the exception of BORG_REPO,"
-    echo "BORG_KEYS_DIR, BORG_SECURITY_DIR and BORG_CACHE_DIR, as these are set"
-    echo "automatically based on the environment variables defined above."
+    echo "other environment variables recognized by borg, with the exception of"
+    echo "\$BORG_REPO, \$BORG_KEYS_DIR, \$BORG_SECURITY_DIR and \$BORG_CACHE_DIR, as these"
+    echo "are set automatically based on the environment variables defined above."
     echo
     echo "path is the folder to backup"
     echo
@@ -35,7 +35,7 @@ if [[ -z "$1" || ! -f "$1" || -z $2 || ! -d "$2" ]]; then
     echo "inside of the container. These are the following:"
     echo "  /source: the source directory (passed to this command as path)"
     echo "  /destination: the destination directory (a subdirectory of \$DESTINATION based"
-    echo "    on the source path). You shouldn't need to ever use this, as BORG_REPO is"
+    echo "    on the source path). You shouldn't need to ever use this, as \$BORG_REPO is"
     echo "    set to this path, so not specifying the repository name should work"
     exit 1
 fi

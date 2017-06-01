@@ -28,8 +28,8 @@ if [[ -z "$1" || ! -f "$1" ]]; then
     echo "paths are the paths to backup. Is combined with \$TARGETS"
     echo
     echo "This script uses borg.sh internally, with the same env file, and thus supports"
-    echo "all environment variables it does. In particular, DESTINATION and"
-    echo "BORG_PASSPHRASE are important. Please run borg.sh to see it's help information"
+    echo "all environment variables it does. In particular, \$DESTINATION and"
+    echo "\$BORG_PASSPHRASE are important. Please run borg.sh to see it's help information"
     exit 1
 fi
 
