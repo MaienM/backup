@@ -55,6 +55,11 @@ env file is a file with the following environment variables:
 Of course, all of these can also just be set in the environment, as long as they
 are not overridden in the env file
 
+Additionally, the env file is passed to borg, so it can also contain any of the
+other environment variables recognized by borg, with the exception of BORG_REPO,
+BORG_KEYS_DIR, BORG_SECURITY_DIR and BORG_CACHE_DIR, as these are set
+automatically based on the environment variables defined above.
+
 path is the folder to backup
 
 As borg will be ran inside a docker container, the paths you pass must the ones

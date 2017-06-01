@@ -24,6 +24,11 @@ if [[ -z "$1" || ! -f "$1" || -z $2 || ! -d "$2" ]]; then
     echo "Of course, all of these can also just be set in the environment, as long as they"
     echo "are not overridden in the env file"
     echo
+    echo "Additionally, the env file is passed to borg, so it can also contain any of the"
+    echo "other environment variables recognized by borg, with the exception of BORG_REPO,"
+    echo "BORG_KEYS_DIR, BORG_SECURITY_DIR and BORG_CACHE_DIR, as these are set"
+    echo "automatically based on the environment variables defined above."
+    echo
     echo "path is the folder to backup"
     echo
     echo "As borg will be ran inside a docker container, the paths you pass must the ones"
