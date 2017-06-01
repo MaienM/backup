@@ -1,12 +1,13 @@
 #!/bin/bash
 
-set -o pipefail
+set -o pipefail -o errexit
 
 DEFAULT_KEEP_HOURLY=48
 DEFAULT_KEEP_DAILY=14
 DEFAULT_KEEP_WEEKLY=8
 DEFAULT_KEEP_MONTHLY=-1
 DEFAULT_KEEP_YEARLY=-1
+DEFAULT_RETRY=1
 
 # Check arguments
 if [[ -z "$1" || ! -f "$1" ]]; then
@@ -21,6 +22,7 @@ if [[ -z "$1" || ! -f "$1" ]]; then
     echo "  KEEP_WEEKLY: the amount of weekly backups to keep [$DEFAULT_KEEP_WEEKLY]"
     echo "  KEEP_MONTHLY: the amount of monthly backups to keep [$DEFAULT_KEEP_MONTHLY]"
     echo "  KEEP_YEARLY: the amount of yearly backups to keep [$DEFAULT_KEEP_YEARLY]"
+    echo "  RETRY: the amount of times to re-attempt a command if it fails [$DEFAULT_RETRY]"
     echo
     echo "Of course, all of these can also just be set in the environment, as long as they"
     echo "are not overridden in the env file"
@@ -43,11 +45,32 @@ KEEP_DAILY="${KEEP_DAILY:-$DEFAULT_KEEP_DAILY}"
 KEEP_WEEKLY="${KEEP_WEEKLY:-$DEFAULT_KEEP_WEEKLY}"
 KEEP_MONTHLY="${KEEP_MONTHLY:-$DEFAULT_KEEP_MONTHLY}"
 KEEP_YEARLY="${KEEP_YEARLY:-$DEFAULT_KEEP_YEARLY}"
+RETRY="${RETRY:-$DEFAULT_RETRY}"
 source "$ENV_FILE"
 
 # Function that calls the borg script
 function borg() {
     "$(realpath "${BASH_SOURCE%/*}")/borg.sh" "$@" | sed 's/^/  /'
+}
+
+# Function that tries a command, with support for retrying
+function do_with_retry() {
+    attempt=0
+    while true; do
+        retval=0
+        eval "$@" || retval=$?
+
+        if [[ $retval -gt 0 ]]; then
+            if [[ $attempt -lt $RETRY ]]; then
+                attempt=$((attempt+1))
+                echo >&2 "Retrying [$attempt/$RETRY]"
+            else
+                return $retval
+            fi
+        else
+            return 0
+        fi
+    done
 }
 
 # Function that processes a directory
@@ -62,13 +85,13 @@ function process_directory() {
     # Create new backups
     echo "=== Backup"
     echo
-    borg "$ENV_FILE" "$bdir" create -v -s "::$(date +'%Y-%m-%d_%H:%M:%S')" "/source" || return 1
+    do_with_retry borg "$ENV_FILE" "$bdir" create -v -s "::$(date +'%Y-%m-%d_%H:%M:%S')" "/source"
     echo
 
     # Cleanup old backups
     echo "=== Cleanup"
     echo
-    borg "$ENV_FILE" "$bdir" prune -v -s \
+    do_with_retry borg "$ENV_FILE" "$bdir" prune -v -s \
         --keep-hourly="$KEEP_HOURLY" \
         --keep-daily="$KEEP_DAILY" \
         --keep-weekly="$KEEP_WEEKLY" \
