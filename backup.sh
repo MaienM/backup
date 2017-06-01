@@ -8,6 +8,7 @@ DEFAULT_KEEP_WEEKLY=8
 DEFAULT_KEEP_MONTHLY=-1
 DEFAULT_KEEP_YEARLY=-1
 DEFAULT_RETRY=1
+DEFAULT_RETRY_SLEEP=10
 
 # Check arguments
 if [[ -z "$1" || ! -f "$1" ]]; then
@@ -23,6 +24,7 @@ if [[ -z "$1" || ! -f "$1" ]]; then
     echo "  KEEP_MONTHLY: the amount of monthly backups to keep [$DEFAULT_KEEP_MONTHLY]"
     echo "  KEEP_YEARLY: the amount of yearly backups to keep [$DEFAULT_KEEP_YEARLY]"
     echo "  RETRY: the amount of times to re-attempt a command if it fails [$DEFAULT_RETRY]"
+    echo "  RETRY_SLEEP: the amount of time to wait between attempts, in seconds [$DEFAULT_RETRY_SLEEP]"
     echo
     echo "Of course, all of these can also just be set in the environment, as long as they"
     echo "are not overridden in the env file"
@@ -46,6 +48,7 @@ KEEP_WEEKLY="${KEEP_WEEKLY:-$DEFAULT_KEEP_WEEKLY}"
 KEEP_MONTHLY="${KEEP_MONTHLY:-$DEFAULT_KEEP_MONTHLY}"
 KEEP_YEARLY="${KEEP_YEARLY:-$DEFAULT_KEEP_YEARLY}"
 RETRY="${RETRY:-$DEFAULT_RETRY}"
+RETRY_SLEEP="${RETRY_SLEEP:-$DEFAULT_RETRY_SLEEP}"
 source "$ENV_FILE"
 
 # Function that calls the borg script
@@ -64,6 +67,7 @@ function do_with_retry() {
             if [[ $attempt -lt $RETRY ]]; then
                 attempt=$((attempt+1))
                 echo >&2 "Retrying [$attempt/$RETRY]"
+                sleep $RETRY_SLEEP
             else
                 return $retval
             fi

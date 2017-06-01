@@ -24,6 +24,7 @@ env file is a file with the following environment variables:
   KEEP_MONTHLY: the amount of monthly backups to keep [-1]
   KEEP_YEARLY: the amount of yearly backups to keep [-1]
   RETRY: the amount of times to re-attempt a command if it fails [1]
+  RETRY_SLEEP: the amount of time to wait between attempts, in seconds [10]
 
 Of course, all of these can also just be set in the environment, as long as they
 are not overridden in the env file
