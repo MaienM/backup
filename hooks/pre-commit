@@ -1,0 +1,5 @@
+#!/bin/sh
+
+echo "Updating README"
+cat README.adoc | ./README.compile.awk | tee README.adoc > /dev/null
+git add README.adoc

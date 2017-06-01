@@ -10,6 +10,7 @@ without underlying dependencies.
 This is the main script to perform backups. It will perform a backup for every file/folder passed to
 it as an argument.
 
+:expandcommand: ./backup.sh 
 ----
 Usage: ./backup.sh [env file] [paths...]
 
@@ -37,6 +38,7 @@ BORG_PASSPHRASE are important. Please run borg.sh to see it's help information
 
 This script is a wrapper around a borg docker container.
 
+:expandcommand: ./borg.sh 
 ----
 Usage: ./borg.sh [env file] [path] [arguments...]
 
