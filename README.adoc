@@ -12,12 +12,12 @@ it as an argument.
 
 :expandcommand: ./backup.sh 
 ----
-Usage: ./backup.sh [env file] [paths...]
+Usage: ./backup.sh [ENV_FILE] [PATHS...]
 
-env file is a file with the following environment variables:
+ENV_FILE is a file with the following environment variables:
   DESTINATION: the root destination folder. A subfolder in this folder will be
     used for each of the source paths
-  TARGETS: the paths to backup. Combined with the paths passed as arguments
+  TARGETS: the paths to backup. Combined with the PATHS passed as arguments
   KEEP_HOURLY: the amount of hourly backups to keep [48]
   KEEP_DAILY: the amount of daily backups to keep [14]
   KEEP_WEEKLY: the amount of weekly backups to keep [8]
@@ -27,11 +27,11 @@ env file is a file with the following environment variables:
   RETRY_SLEEP: the amount of time to wait between attempts, in seconds [10]
 
 Of course, all of these can also just be set in the environment, as long as they
-are not overridden in the env file
+are not overridden in the ENV_FILE
 
-paths are the paths to backup. Is combined with $TARGETS
+PATHS are the paths to backup. There are in addition to $TARGETS
 
-This script uses borg.sh internally, with the same env file, and thus supports
+This script uses borg.sh internally, with the same ENV_FILE, and thus supports
 all environment variables it does. In particular, $DESTINATION and
 $BORG_PASSPHRASE are important. Please run borg.sh to see it's help information
 ----
@@ -42,9 +42,9 @@ This script is a wrapper around a borg docker container.
 
 :expandcommand: ./borg.sh 
 ----
-Usage: ./borg.sh [env file] [path] [arguments...]
+Usage: ./borg.sh [ENV_FILE] [PATH] [ARGUMENTS...]
 
-env file is a file with the following environment variables:
+ENV_FILE is a file with the following environment variables:
   DESTINATION: the root destination folder. A subfolder in this folder will be
     used for the backup, depending on the backed up path [/backups]
   BORG_PASSPHRASE: the passphrase to use
@@ -59,16 +59,18 @@ env file is a file with the following environment variables:
 Of course, all of these can also just be set in the environment, as long as they
 are not overridden in the env file
 
-Additionally, the env file is passed to borg, so it can also contain any of the
+Additionally, the ENV_FILE is passed to borg, so it can also contain any of the
 other environment variables recognized by borg, with the exception of
 $BORG_REPO, $BORG_KEYS_DIR, $BORG_SECURITY_DIR and $BORG_CACHE_DIR, as these
 are set automatically based on the environment variables defined above.
 
-path is the folder to backup
+PATH is the folder to backup
+
+ARGUMENTS are arguments for borg
 
 As borg will be ran inside a docker container, the paths you pass must the ones
 inside of the container. These are the following:
-  /source: the source directory (passed to this command as path)
+  /source: the source directory (passed to this command as PATH)
   /destination: the destination directory (a subdirectory of $DESTINATION based
     on the source path). You shouldn't need to ever use this, as $BORG_REPO is
     set to this path, so not specifying the repository name should work

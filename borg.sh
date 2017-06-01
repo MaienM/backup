@@ -7,9 +7,9 @@ DEFAULT_OUTER_BORG_CACHE_DIR="/var/lib/borgbackup/cache"
 
 # Check arguments
 if [[ -z "$1" || ! -f "$1" || -z $2 || ! -d "$2" ]]; then
-    echo "Usage: $0 [env file] [path] [arguments...]"
+    echo "Usage: $0 [ENV_FILE] [PATH] [ARGUMENTS...]"
     echo
-    echo "env file is a file with the following environment variables:"
+    echo "ENV_FILE is a file with the following environment variables:"
     echo "  DESTINATION: the root destination folder. A subfolder in this folder will be"
     echo "    used for the backup, depending on the backed up path [$DEFAULT_DESTINATION]"
     echo "  BORG_PASSPHRASE: the passphrase to use"
@@ -24,16 +24,18 @@ if [[ -z "$1" || ! -f "$1" || -z $2 || ! -d "$2" ]]; then
     echo "Of course, all of these can also just be set in the environment, as long as they"
     echo "are not overridden in the env file"
     echo
-    echo "Additionally, the env file is passed to borg, so it can also contain any of the"
+    echo "Additionally, the ENV_FILE is passed to borg, so it can also contain any of the"
     echo "other environment variables recognized by borg, with the exception of"
     echo "\$BORG_REPO, \$BORG_KEYS_DIR, \$BORG_SECURITY_DIR and \$BORG_CACHE_DIR, as these"
     echo "are set automatically based on the environment variables defined above."
     echo
-    echo "path is the folder to backup"
+    echo "PATH is the folder to backup"
+    echo
+    echo "ARGUMENTS are arguments for borg"
     echo
     echo "As borg will be ran inside a docker container, the paths you pass must the ones"
     echo "inside of the container. These are the following:"
-    echo "  /source: the source directory (passed to this command as path)"
+    echo "  /source: the source directory (passed to this command as PATH)"
     echo "  /destination: the destination directory (a subdirectory of \$DESTINATION based"
     echo "    on the source path). You shouldn't need to ever use this, as \$BORG_REPO is"
     echo "    set to this path, so not specifying the repository name should work"

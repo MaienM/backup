@@ -12,12 +12,12 @@ DEFAULT_RETRY_SLEEP=10
 
 # Check arguments
 if [[ -z "$1" || ! -f "$1" ]]; then
-    echo "Usage: $0 [env file] [paths...]"
+    echo "Usage: $0 [ENV_FILE] [PATHS...]"
     echo
-    echo "env file is a file with the following environment variables:"
+    echo "ENV_FILE is a file with the following environment variables:"
     echo "  DESTINATION: the root destination folder. A subfolder in this folder will be"
     echo "    used for each of the source paths"
-    echo "  TARGETS: the paths to backup. Combined with the paths passed as arguments"
+    echo "  TARGETS: the paths to backup. Combined with the PATHS passed as arguments"
     echo "  KEEP_HOURLY: the amount of hourly backups to keep [$DEFAULT_KEEP_HOURLY]"
     echo "  KEEP_DAILY: the amount of daily backups to keep [$DEFAULT_KEEP_DAILY]"
     echo "  KEEP_WEEKLY: the amount of weekly backups to keep [$DEFAULT_KEEP_WEEKLY]"
@@ -27,11 +27,11 @@ if [[ -z "$1" || ! -f "$1" ]]; then
     echo "  RETRY_SLEEP: the amount of time to wait between attempts, in seconds [$DEFAULT_RETRY_SLEEP]"
     echo
     echo "Of course, all of these can also just be set in the environment, as long as they"
-    echo "are not overridden in the env file"
+    echo "are not overridden in the ENV_FILE"
     echo
-    echo "paths are the paths to backup. Is combined with \$TARGETS"
+    echo "PATHS are the paths to backup. There are in addition to \$TARGETS"
     echo
-    echo "This script uses borg.sh internally, with the same env file, and thus supports"
+    echo "This script uses borg.sh internally, with the same ENV_FILE, and thus supports"
     echo "all environment variables it does. In particular, \$DESTINATION and"
     echo "\$BORG_PASSPHRASE are important. Please run borg.sh to see it's help information"
     exit 1
