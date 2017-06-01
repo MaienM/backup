@@ -1,16 +1,16 @@
-# Backups
+= Backups
 
 This repository contains two script to manage backups using docker and attic.
 
 The underlying idea of these scripts is that each folder is backed up separately from the rest,
 without underlying dependencies.
 
-## backup.sh
+== backup.sh
 
 This is the main script to perform backups. It will perform a backup for every file/folder passed to
 it as an argument.
 
-```
+----
 Usage: ./backup.sh [env file] [paths...]
 
 env file is a file with the following environment variables:
@@ -31,13 +31,13 @@ paths are the paths to backup. Is combined with $TARGETS
 This script uses borg.sh internally, with the same env file, and thus supports
 all environment variables it does. In particular, DESTINATION and
 BORG_PASSPHRASE are important. Please run borg.sh to see it's help information
-```
+----
 
-## borg.sh
+== borg.sh
 
-This script is a wrapper around an borg docker container.
+This script is a wrapper around a borg docker container.
 
-```
+----
 Usage: ./borg.sh [env file] [path] [arguments...]
 
 env file is a file with the following environment variables:
@@ -68,4 +68,4 @@ inside of the container. These are the following:
   /destination: the destination directory (a subdirectory of $DESTINATION based
     on the source path). You shouldn't need to ever use this, as BORG_REPO is
     set to this path, so not specifying the repository name should work
-```
+----
