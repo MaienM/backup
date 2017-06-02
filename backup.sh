@@ -120,7 +120,7 @@ echo
 
 declare -A statuses
 failed=0
-for bdir in "$TARGETS" "$@"; do
+for bdir in "${TARGETS[@]}" "$@"; do
     # If this folder has already been processed, skip
     if [[ ${statuses["$bdir"]+isset} ]]; then
         echo
