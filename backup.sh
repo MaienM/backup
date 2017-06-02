@@ -64,11 +64,16 @@ function do_with_retry() {
         eval "$@" || retval=$?
 
         if [[ $retval -gt 0 ]]; then
+            echo
+            echo >&2 -n "WARNING: Command failed ($retval), "
             if [[ $attempt -lt $RETRY ]]; then
                 attempt=$((attempt+1))
-                echo >&2 "Retrying [$attempt/$RETRY]"
+                echo >&2 "retrying [$attempt/$RETRY]"
+                echo
                 sleep $RETRY_SLEEP
             else
+                echo >&2 "marking directory as failed"
+                echo
                 return $retval
             fi
         else
@@ -89,18 +94,21 @@ function process_directory() {
     # Create new backups
     echo "=== Backup"
     echo
-    do_with_retry borg "$ENV_FILE" "$bdir" create -v -s "::$(date +'%Y-%m-%d_%H:%M:%S')" "/source"
+    do_with_retry \
+        borg "$ENV_FILE" "$bdir" create -v -s "::$(date +'%Y-%m-%d_%H:%M:%S')" "/source" \
+    || return 1
     echo
 
     # Cleanup old backups
     echo "=== Cleanup"
     echo
-    do_with_retry borg "$ENV_FILE" "$bdir" prune -v -s \
-        --keep-hourly="$KEEP_HOURLY" \
-        --keep-daily="$KEEP_DAILY" \
-        --keep-weekly="$KEEP_WEEKLY" \
-        --keep-monthly="$KEEP_MONTHLY" \
-        --keep-yearly="$KEEP_YEARLY" \
+    do_with_retry \
+        borg "$ENV_FILE" "$bdir" prune -v -s \
+            --keep-hourly="$KEEP_HOURLY" \
+            --keep-daily="$KEEP_DAILY" \
+            --keep-weekly="$KEEP_WEEKLY" \
+            --keep-monthly="$KEEP_MONTHLY" \
+            --keep-yearly="$KEEP_YEARLY" \
     || return 1
     echo
 }
@@ -125,11 +133,8 @@ for bdir in "$TARGETS" "$@"; do
     process_directory "$bdir"
     statuscode=$?
 
-    # If the processing failed, indicate so
+    # If the processing failed, store this
     if [[ $statuscode -ne 0 ]]; then
-        echo
-        echo >&2 "WARNING: Action failed"
-        echo
         failed=1
     fi
 
