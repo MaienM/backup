@@ -86,7 +86,7 @@ function do_with_retry() {
 function process_directory() {
     echo "== $bdir"
     echo
-    borg "$ENV_FILE" "$bdir" init -e keyfile &> /dev/null \
+    borg "$ENV_FILE" "$bdir" init -e repokey &> /dev/null \
         && echo "Initialized new repository" \
         || echo "Using existing repository"
     echo
