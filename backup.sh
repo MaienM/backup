@@ -91,6 +91,14 @@ function process_directory() {
         || echo "Using existing repository"
     echo
 
+    # Check repo
+    echo "=== Check"
+    echo
+    do_with_retry \
+        borg "$ENV_FILE" "$bdir" check -v \
+    || return 1
+    echo
+
     # Create new backups
     echo "=== Backup"
     echo
