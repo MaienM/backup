@@ -61,7 +61,7 @@ function do_with_retry() {
     attempt=0
     while true; do
         retval=0
-        eval "$@" || retval=$?
+        "$@" 2>&1 || retval=$?
 
         if [[ $retval -gt 0 ]]; then
             echo
