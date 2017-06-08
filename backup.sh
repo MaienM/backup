@@ -65,14 +65,13 @@ function do_with_retry() {
 
         if [[ $retval -gt 0 ]]; then
             echo
-            echo >&2 -n "WARNING: Command failed ($retval), "
             if [[ $attempt -lt $RETRY ]]; then
                 attempt=$((attempt+1))
-                echo >&2 "retrying [$attempt/$RETRY]"
+                echo >&2 "CAUTION: Command failed ($retval), retrying [$attempt/$RETRY]"
                 echo
                 sleep $RETRY_SLEEP
             else
-                echo >&2 "marking directory as failed"
+                echo >&2 "WARNING: Command failed ($retval), marking directory as failed"
                 echo
                 return $retval
             fi
