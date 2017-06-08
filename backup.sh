@@ -56,11 +56,17 @@ source "$ENV_FILE"
 # An exception to this is OSX, where you'll have to `brew install coreutils` and use greadlink
 cf="$(dirname "$(readlink -f "$0")")"
 
+# Function to create a preformatted asciidoc block
+pre() {
+	echo "...."
+	# Insert a zero-width space before any block delimiter to prevent it from being picked up
+	sed 's/^[.]{4}$/​&/'
+	echo "...."
+}
+
 # Function that calls the borg script
 function borg() {
-    echo "...."
-    "$cf/borg.sh" "$@" | sed 's/^[.]{4}$/​&/'
-    echo "...."
+    "$cf/borg.sh" "$@" | pre
 }
 
 # Function that tries a command, with support for retrying
