@@ -51,9 +51,14 @@ RETRY="${RETRY:-$DEFAULT_RETRY}"
 RETRY_SLEEP="${RETRY_SLEEP:-$DEFAULT_RETRY_SLEEP}"
 source "$ENV_FILE"
 
+# Get the path to the current folder
+# This is not 100% portable, but most distributions come with a readlink that does support -f
+# An exception to this is OSX, where you'll have to `brew install coreutils` and use greadlink
+cf="$(dirname "$(readlink -f "$0")")"
+
 # Function that calls the borg script
 function borg() {
-    "$(realpath "${BASH_SOURCE%/*}")/borg.sh" "$@" | sed 's/^/  /'
+    "$cf/borg.sh" "$@" | sed 's/^/  /'
 }
 
 # Function that tries a command, with support for retrying
@@ -95,6 +100,7 @@ function process_directory() {
     echo
     do_with_retry \
         borg "$ENV_FILE" "$bdir" check -v \
+            | awk -Wi -f "$cf/borg_check_compact_analyzing_archive_count.awk" \
     || return 1
     echo
 
