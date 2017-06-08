@@ -58,7 +58,9 @@ cf="$(dirname "$(readlink -f "$0")")"
 
 # Function that calls the borg script
 function borg() {
-    "$cf/borg.sh" "$@" | sed 's/^/  /'
+    echo "...."
+    "$cf/borg.sh" "$@" | sed 's/^[.]{4}$/​&/'
+    echo "...."
 }
 
 # Function that tries a command, with support for retrying
