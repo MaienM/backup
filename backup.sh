@@ -145,7 +145,7 @@ for bdir in "${TARGETS[@]}" "$@"; do
     # If this folder has already been processed, skip
     if [[ ${statuses["$bdir"]+isset} ]]; then
         echo
-        echo "Folder has already been backed up this run, skipping"
+        echo "INFO: Folder has already been backed up this run, skipping"
         echo
         continue
     fi
