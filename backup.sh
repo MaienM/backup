@@ -108,7 +108,7 @@ function process_directory() {
     echo
     do_with_retry \
         borg "$ENV_FILE" "$bdir" check -v \
-            | awk -Wi -f "$cf/borg_check_compact_analyzing_archive_count.awk" \
+            | awk -Wi -f "$cf/awk/borg_check_compact_analyzing_archive_count.awk" \
     || return 1
     echo
 
