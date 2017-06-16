@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Set strict
+set -o errexit -o nounset -o pipefail
+
 DEFAULT_DESTINATION="/backups"
 DEFAULT_OUTER_BORG_KEYS_DIR="/var/lib/borgbackup/keys"
 DEFAULT_OUTER_BORG_SECURITY_DIR="/var/lib/borgbackup/security"

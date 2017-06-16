@@ -1,6 +1,7 @@
 #!/bin/bash
 
-set -o pipefail -o errexit
+# Set strict
+set -o errexit -o nounset -o pipefail
 
 DEFAULT_KEEP_HOURLY=48
 DEFAULT_KEEP_DAILY=14
