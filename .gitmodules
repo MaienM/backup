@@ -1,0 +1,3 @@
+[submodule "vendor/asciidoc-utils"]
+	path = vendor/asciidoc-utils
+	url = https://github.com/MaienM/asciidoc-utils
